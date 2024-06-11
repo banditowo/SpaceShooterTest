@@ -1,38 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PlayerController : MonoBehaviour
 {
 
-    public float moveSpeed = 5f;
-    public Rigidbody2D rb;
-    public Weapon weapon;
+    [SerializeField] private Weapon weapon;
 
-    Vector2 moveDirection;
-    Vector2 mousePosition;
-
+    [SerializeField] private float rotationSpeed;
 
     void Update()
     {
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveY = Input.GetAxisRaw("Vertical");
-
         if (Input.GetMouseButtonDown(0))
         {
             weapon.Fire();
         }
 
-        moveDirection = new Vector2(moveX, moveY).normalized;
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
+        PlayerRotation();
+    }
 
-        Vector2 aimDirection = mousePosition - rb.position;
-        float aimAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg - 90f;
-        rb.rotation = aimAngle;
+    private void PlayerRotation()
+    {
+        if (Input.GetKey(KeyCode.A))
+            transform.Rotate(Vector3.forward * rotationSpeed);
+        if (Input.GetKey(KeyCode.D))
+            transform.Rotate(Vector3.back * rotationSpeed);
     }
 }
